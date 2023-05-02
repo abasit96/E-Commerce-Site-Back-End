@@ -1,40 +1,51 @@
 const router = require('express').Router();
-const { Tag, Product, ProductTag, Category } = require('../../models');
+const { Tag, Product } = require('../../models');
 
-// The `/api/tags` endpoint
-
-router.get('/', (req, res) => {
-  // find all tags
-  // be sure to include its associated Product data
-  Tag.findAll({
-    include: [Product]
-  })
-  .then(results => {
-    res.json(results)
-  })
+// GET all tags
+router.get('/', async (req, res) => {
+  try {
+    const tags = await Tag.findAll({
+      include: [{ model: Product, attributes: ['id', 'product_name', 'price', 'stock', 'category_id'] }],
+    });
+    res.json(tags);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
 });
 
-router.get('/:id', (req, res) => {
-  // find a single tag by its `id`
-  // be sure to include its associated Product data
-  Tag.findByPk(req.params.id, {
-    include: [Product]
-  })
-  .then(results => {
-    res.json(results)
-  })
+// GET a single tag
+router.get('/:id', async (req, res) => {
+  try {
+    const tag = await Tag.findByPk(req.params.id, {
+      include: [{ model: Product, attributes: ['id', 'product_name', 'price', 'stock', 'category_id'] }],
+    });
+
+    if (!tag) {
+      return res.status(404).json({ error: 'Tag not found' });
+    }
+
+    res.json(tag);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
 });
 
-router.post('/', (req, res) => {
-  // create a new tag
-  Tag.create({
-    tag_name: req.body.tag_name
-  })
-  .then(results => {
-    res.json(results)
-  })
+// Create a new tag
+router.post('/', async (req, res) => {
+  try {
+    const tag = await Tag.create({
+      tag_name: req.body.tag_name,
+    });
+    res.json(tag);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
 });
 
+// Update a tag
 router.put('/:id', async (req, res) => {
   try {
     const tag = await Tag.findByPk(req.params.id);
@@ -54,16 +65,21 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-router.delete('/:id', (req, res) => {
-  // delete on tag by its `id` value
-  Tag.destroy({
-    where: {
-      id: req.params.id
+// Delete a tag
+router.delete('/:id', async (req, res) => {
+  try {
+    const tag = await Tag.findByPk(req.params.id);
+
+    if (!tag) {
+      return res.status(404).json({ error: 'Tag not found' });
     }
-  })
-  .then(results => {
-    res.json(results)
-  })
+
+    await tag.destroy();
+    res.json({ message: 'Tag deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
 });
 
 module.exports = router;
