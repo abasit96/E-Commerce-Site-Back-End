@@ -8,10 +8,9 @@ Link to video: https://drive.google.com/file/d/1nrLlIcSBv8t9g8AkqDw4N913X6Br4Kn2
 
 Screenshots: 
 
-![Screenshot](./Images/Screenshot1.png)
-![Screenshot](./Images/Screenshot2.png)
-![Screenshot](./Images/Screenshot3.png)
-
+![Screenshot](./Images/Screenshot%201.png)
+![Screenshot](./Images/Screenshot%202.png)
+![Screenshot](./Images/Screenshot%203.png)
 ## Table of Contents
 * [Description](#description)
 * [Technologies](#technologies)
