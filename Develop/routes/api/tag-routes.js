@@ -7,7 +7,10 @@ router.get('/', (req, res) => {
   // find all tags
   // be sure to include its associated Product data
   Tag.findAll({
-    include: Product
+    include: [Product]
+  })
+  .then(results => {
+    res.json(results)
   })
 });
 
@@ -15,7 +18,7 @@ router.get('/:id', (req, res) => {
   // find a single tag by its `id`
   // be sure to include its associated Product data
   Tag.findByPk(req.params.id, {
-    include: Product
+    include: [Product]
   })
   .then(results => {
     res.json(results)
@@ -32,16 +35,23 @@ router.post('/', (req, res) => {
   })
 });
 
-router.put('/:id', (req, res) => {
-  // update a tag's name by its `id` value
-  Tag.update({
-    tag_name: req.body.tag_name
-  },
-  {
-    where: {
-      id: req.params.id
+router.put('/:id', async (req, res) => {
+  try {
+    const tag = await Tag.findByPk(req.params.id);
+
+    if (!tag) {
+      return res.status(404).json({ error: 'Tag not found' });
     }
-  })
+
+    const updatedTag = await tag.update({
+      tag_name: req.body.tag_name,
+    });
+
+    res.json(updatedTag);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
 });
 
 router.delete('/:id', (req, res) => {

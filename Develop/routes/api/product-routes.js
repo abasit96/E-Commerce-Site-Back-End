@@ -8,7 +8,7 @@ router.get('/', (req, res) => {
   // find all products
   // be sure to include its associated Category and Tag data
   Product.findAll({
-    include: Product
+    include: [Category, Tag]
   })
   .then(results => {
     res.json(results)
@@ -20,7 +20,7 @@ router.get('/:id', (req, res) => {
   // find a single product by its `id`
   // be sure to include its associated Category and Tag data
   Product.findByPk(req.params.id, {
-    include: Product
+    include: [Category, Tag]
   })
   .then(results => {
     res.json(results)
