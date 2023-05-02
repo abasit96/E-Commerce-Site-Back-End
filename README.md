@@ -30,7 +30,9 @@ For installantion, run < npm i > in the terminal.
 After the dependencies have installed, create a .env file in which you will put the following:
 
 DB_NAME = "ecommerce_db"
+
 DB_USER = < Your Username >
+
 DB_PASSWORD = < Your Password >
 
 Next, Login to mysql and source the schema.sql
